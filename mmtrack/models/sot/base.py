@@ -151,7 +151,7 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
         the outer list indicating test time augmentations.
         """
         print("forward base.py")
-        print(f"{return_loss=}")
+        print(f"return_loss={return_loss}")
         if return_loss:
             return self.forward_train(
                 img,
