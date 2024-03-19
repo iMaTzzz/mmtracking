@@ -156,7 +156,6 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
         search_img = kwargs.pop('search_img', None)
         search_img_metas = kwargs.pop('search_img_metas', None)
         return_loss = kwargs.pop('return_loss', True)
-        scaling_factor = kwargs.pop('scaling_factor', 1)
 
         # Print statements for debug purposes
         print(f"img={img}")

@@ -47,6 +47,7 @@ def main():
     dynamic_axes = {'input0': {2: 'height', 3: 'width'},
                     'input1': {0: 'tl[x]', 1: 'tl[y]', 2: 'width', 3: 'height'}}
     #torch.onnx.export(model, (dummy_img, dummy_bbox, dummy_z_feat, dummy_avg_channel), "object_tracking_model.onnx", verbose=True, dynamic_axes=dynamic_axes)
+    scaling_factor = data.pop('scaling_factor', 1)
     torch.onnx.export(model, data, "object_tracking_model.onnx", verbose=True)
 
 
