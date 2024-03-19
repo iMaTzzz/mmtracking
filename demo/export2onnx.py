@@ -25,6 +25,7 @@ def main():
 
     # build the model from a config file and a checkpoint file
     model = init_model(args.config, args.checkpoint, device=args.device)
+    print(model)
 
     if args.gt_bbox_file is not None:
         bboxes = mmcv.list_from_file(args.gt_bbox_file)
