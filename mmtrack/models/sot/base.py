@@ -88,7 +88,7 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
         """Test function with test time augmentation."""
         pass
 
-    def forward_test(self, **kwargs):
+    def forward_test(self, imgs, img_metas, **kwargs):
         """
         Args:
             imgs (List[Tensor]): the outer list indicates test-time
@@ -98,11 +98,6 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
                 augs (multiscale, flip, etc.) and the inner list indicates
                 images in a batch.
         """
-        if 'imgs' in kwargs:
-            imgs = kwargs['imgs']
-        if 'img_metas' in kwargs:
-            img_metas = kwargs['img_metas']
-
         if isinstance(imgs, torch.Tensor):
             imgs = [imgs]
         elif not isinstance(imgs, list):
@@ -139,13 +134,7 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
             return self.aug_test(imgs, img_metas, **kwargs)
 
     @auto_fp16(apply_to=('img', 'search_img'))
-    def forward(self,
-                img,
-                img_metas,
-                search_img=None,
-                search_img_metas=None,
-                return_loss=True,
-                **kwargs):
+    def forward(self, **kwargs):
         """Calls either :func:`forward_train` or :func:`forward_test` depending
         on whether ``return_loss`` is ``True``.
 
@@ -155,6 +144,16 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
         should be double nested (i.e.  List[Tensor], List[List[dict]]), with
         the outer list indicating test time augmentations.
         """
+        if 'img' in kwargs:
+            img = kwargs['img']
+        if 'img_metas' in kwargs:
+            img_metas = kwargs['img_metas']
+        if 'search_img' in kwargs:
+            search_img = kwargs['search_img']
+        if 'search_img_metas' in kwargs:
+            search_img_metas = kwargs['search_img_metas']
+        if 'return_loss' in kwargs:
+            return_loss = kwargs['return_loss']
         print(f"img={img}")
         print(f"img_metas={img_metas}")
         print(f"search_img={search_img}")
