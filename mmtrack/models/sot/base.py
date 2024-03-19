@@ -150,8 +150,12 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
         should be double nested (i.e.  List[Tensor], List[List[dict]]), with
         the outer list indicating test time augmentations.
         """
-        print("forward base.py")
+        print(f"img={img}")
+        print(f"img_metas={img_metas}")
+        print(f"search_img={search_img}")
+        print(f"search_img_metas={search_img_metas}")
         print(f"return_loss={return_loss}")
+        print(f"kwargs={kwargs}")
         if return_loss:
             return self.forward_train(
                 img,
