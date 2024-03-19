@@ -145,22 +145,12 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
         should be double nested (i.e.  List[Tensor], List[List[dict]]), with
         the outer list indicating test time augmentations.
         """
-        if 'img' in kwargs:
-            img = kwargs['img']
-        if 'img_metas' in kwargs:
-            img_metas = kwargs['img_metas']
-        if 'search_img' in kwargs:
-            search_img = kwargs['search_img']
-        else:
-            search_img = None
-        if 'search_img_metas' in kwargs:
-            search_img_metas = kwargs['search_img_metas']
-        else:
-            search_img_metas = None
-        if 'return_loss' in kwargs:
-            return_loss = kwargs['return_loss']
-        else:
-            return_loss = True
+        img = kwargs.get('img')
+        img_metas = kwargs.get('img_metas')
+        search_img = kwargs.get('search_img')
+        search_img_metas = kwargs.get('search_img_metas')
+        return_loss = kwargs.get('return_loss', True)
+
         print(f"img={img}")
         print(f"img_metas={img_metas}")
         print(f"search_img={search_img}")
