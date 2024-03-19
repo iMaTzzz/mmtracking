@@ -39,6 +39,8 @@ def main():
             result, data = inference_sot(model, img, init_bbox, frame_id=i)
             break
 
+    scaling_factor = data['img_metas'][0][0].pop('scaling_factor', 1)
+    print(f"{scaling_factor=}")
     print(f"data={data}")
     dummy_img = torch.randn(1, 3, 224, 224)  # Example shape: (batch_size=1, channels=3, height=224, width=224)
     dummy_bbox = torch.tensor([0, 0, 100, 100])  # Example bbox, shape: (4, )
@@ -47,7 +49,6 @@ def main():
     dynamic_axes = {'input0': {2: 'height', 3: 'width'},
                     'input1': {0: 'tl[x]', 1: 'tl[y]', 2: 'width', 3: 'height'}}
     #torch.onnx.export(model, (dummy_img, dummy_bbox, dummy_z_feat, dummy_avg_channel), "object_tracking_model.onnx", verbose=True, dynamic_axes=dynamic_axes)
-    scaling_factor = data['img_metas'][0][0].pop('scaling_factor', 1)
     torch.onnx.export(model, data, "object_tracking_model.onnx", verbose=True)
 
 
