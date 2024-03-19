@@ -88,8 +88,7 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
         """Test function with test time augmentation."""
         pass
 
-    # def forward_test(self, imgs, img_metas, **kwargs):
-    def forward_test(self, **kwargs):
+    def forward_test(self, imgs, img_metas, **kwargs):
         """
         Args:
             imgs (List[Tensor]): the outer list indicates test-time
@@ -99,8 +98,6 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
                 augs (multiscale, flip, etc.) and the inner list indicates
                 images in a batch.
         """
-        imgs = kwargs['img']
-        img_metas = kwargs['img_metas']
         if isinstance(imgs, torch.Tensor):
             imgs = [imgs]
         elif not isinstance(imgs, list):
@@ -154,11 +151,11 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
         should be double nested (i.e.  List[Tensor], List[List[dict]]), with
         the outer list indicating test time augmentations.
         """
-        img = kwargs['img']
-        img_metas = kwargs['img_metas']
-        search_img = kwargs.get('search_img')
-        search_img_metas = kwargs.get('search_img_metas')
-        return_loss = kwargs.get('return_loss', True)
+        img = kwargs.pop('img')
+        img_metas = kwargs.pop('img_metas')
+        search_img = kwargs.pop('search_img', None)
+        search_img_metas = kwargs.pop('search_img_metas', None)
+        return_loss = kwargs.pop('return_loss', True)
 
         print(f"img={img}")
         print(f"img_metas={img_metas}")
@@ -174,8 +171,7 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
                 search_img_metas=search_img_metas,
                 **kwargs)
         else:
-            # return self.forward_test(img, img_metas, **kwargs)
-            return self.forward_test(**kwargs)
+            return self.forward_test(img, img_metas, **kwargs)
 
     def _parse_losses(self, losses):
         """Parse the raw outputs (losses) of the network.
