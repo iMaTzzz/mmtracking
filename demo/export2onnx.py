@@ -41,9 +41,13 @@ def main():
             break
 
     print(data)
-    dummy_input = torch.randn(1, 3, 224, 224)  # Example shape: (batch_size, channels, height, width)
-    dummy_img_metas = torch.randn(1, 3)  # Example shape: (batch_size, num_img_metas)
-    torch.onnx.export(model, (dummy_input, dummy_img_metas), "object_tracking_model.onnx", verbose=True, dynamic_axes={'input': {2: 'height', 3: 'width'}})
+    dummy_img = torch.randn(1, 3, 224, 224)  # Example shape: (batch_size=1, channels=3, height=224, width=224)
+    dummy_bbox = torch.tensor([0, 0, 100, 100])  # Example bbox, shape: (4, )
+    dummy_z_feat = (torch.randn(1, 64, 32, 32), torch.randn(1, 128, 16, 16))  # Example shapes
+    dummy_avg_channel = torch.tensor([0.5, 0.5, 0.5])  # Example avg_channel, shape: (3, )
+    dynamic_axes = {'input0': {2: 'height', 3: 'width'},
+                    'input1': {0: 'tl[x]', 1: 'tl[y]', 2: 'width', 3: 'height'}}
+    torch.onnx.export(model, (dummy_img, dummy_bbox, dummy_z_feat, dummy_avg_channel), "object_tracking_model.onnx", verbose=True, dynamic_axes=dynamic_axes)
 
 
 if __name__ == '__main__':
