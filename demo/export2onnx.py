@@ -3,6 +3,7 @@ import os
 import os.path as osp
 import tempfile
 from argparse import ArgumentParser
+import torch
 
 import cv2
 import mmcv
