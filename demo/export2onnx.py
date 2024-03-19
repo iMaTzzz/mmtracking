@@ -39,7 +39,7 @@ def main():
             result, data = inference_sot(model, img, init_bbox, frame_id=i)
             break
 
-    print(data)
+    print(f"data={data}")
     dummy_img = torch.randn(1, 3, 224, 224)  # Example shape: (batch_size=1, channels=3, height=224, width=224)
     dummy_bbox = torch.tensor([0, 0, 100, 100])  # Example bbox, shape: (4, )
     dummy_z_feat = (torch.randn(1, 64, 32, 32), torch.randn(1, 128, 16, 16))  # Example shapes
