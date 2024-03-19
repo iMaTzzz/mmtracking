@@ -37,7 +37,6 @@ def main():
     for i, img in enumerate(imgs):
         if i == 0:
             result, data = inference_sot(model, img, init_bbox, frame_id=i)
-            print(f"result={result}")
             break
 
     print(data)
@@ -47,7 +46,8 @@ def main():
     dummy_avg_channel = torch.tensor([0.5, 0.5, 0.5])  # Example avg_channel, shape: (3, )
     dynamic_axes = {'input0': {2: 'height', 3: 'width'},
                     'input1': {0: 'tl[x]', 1: 'tl[y]', 2: 'width', 3: 'height'}}
-    torch.onnx.export(model, (dummy_img, dummy_bbox, dummy_z_feat, dummy_avg_channel), "object_tracking_model.onnx", verbose=True, dynamic_axes=dynamic_axes)
+    #torch.onnx.export(model, (dummy_img, dummy_bbox, dummy_z_feat, dummy_avg_channel), "object_tracking_model.onnx", verbose=True, dynamic_axes=dynamic_axes)
+    torch.onnx.export(model, data, "object_tracking_model.onnx", verbose=True)
 
 
 if __name__ == '__main__':
