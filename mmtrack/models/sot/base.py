@@ -88,7 +88,7 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
         """Test function with test time augmentation."""
         pass
 
-    def forward_test(self, imgs, img_metas, **kwargs):
+    def forward_test(self, **kwargs):
         """
         Args:
             imgs (List[Tensor]): the outer list indicates test-time
@@ -98,6 +98,11 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
                 augs (multiscale, flip, etc.) and the inner list indicates
                 images in a batch.
         """
+        if 'imgs' in kwargs:
+            imgs = kwargs['imgs']
+        if 'img_metas' in kwargs:
+            img_metas = kwargs['img_metas']
+
         if isinstance(imgs, torch.Tensor):
             imgs = [imgs]
         elif not isinstance(imgs, list):
