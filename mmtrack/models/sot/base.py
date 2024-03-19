@@ -134,7 +134,8 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
             return self.aug_test(imgs, img_metas, **kwargs)
 
     @auto_fp16(apply_to=('img', 'search_img'))
-    def forward(self, **kwargs):
+    def forward(self,
+                **kwargs):
         """Calls either :func:`forward_train` or :func:`forward_test` depending
         on whether ``return_loss`` is ``True``.
 
@@ -150,10 +151,16 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
             img_metas = kwargs['img_metas']
         if 'search_img' in kwargs:
             search_img = kwargs['search_img']
+        else:
+            search_img = None
         if 'search_img_metas' in kwargs:
             search_img_metas = kwargs['search_img_metas']
+        else:
+            search_img_metas = None
         if 'return_loss' in kwargs:
             return_loss = kwargs['return_loss']
+        else:
+            return_loss = True
         print(f"img={img}")
         print(f"img_metas={img_metas}")
         print(f"search_img={search_img}")
