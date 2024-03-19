@@ -88,7 +88,8 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
         """Test function with test time augmentation."""
         pass
 
-    def forward_test(self, imgs, img_metas, **kwargs):
+    # def forward_test(self, imgs, img_metas, **kwargs):
+    def forward_test(self, **kwargs):
         """
         Args:
             imgs (List[Tensor]): the outer list indicates test-time
@@ -98,6 +99,8 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
                 augs (multiscale, flip, etc.) and the inner list indicates
                 images in a batch.
         """
+        imgs = kwargs['imgs']
+        img_metas = kwargs['img_metas']
         if isinstance(imgs, torch.Tensor):
             imgs = [imgs]
         elif not isinstance(imgs, list):
@@ -134,8 +137,14 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
             return self.aug_test(imgs, img_metas, **kwargs)
 
     @auto_fp16(apply_to=('img', 'search_img'))
-    def forward(self,
-                **kwargs):
+    # def forward(self,
+            # img,
+            # img_metas,
+            # search_img=None,
+            # search_img_metas=None,
+            # return_loss=True,
+            # **kwargs):
+    def forward(self, **kwargs):
         """Calls either :func:`forward_train` or :func:`forward_test` depending
         on whether ``return_loss`` is ``True``.
 
@@ -145,8 +154,8 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
         should be double nested (i.e.  List[Tensor], List[List[dict]]), with
         the outer list indicating test time augmentations.
         """
-        img = kwargs.get('img')
-        img_metas = kwargs.get('img_metas')
+        img = kwargs['img']
+        img_metas = kwargs['img_metas']
         search_img = kwargs.get('search_img')
         search_img_metas = kwargs.get('search_img_metas')
         return_loss = kwargs.get('return_loss', True)
@@ -165,7 +174,8 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
                 search_img_metas=search_img_metas,
                 **kwargs)
         else:
-            return self.forward_test(img, img_metas, **kwargs)
+            # return self.forward_test(img, img_metas, **kwargs)
+            return self.forward_test(**kwargs)
 
     def _parse_losses(self, losses):
         """Parse the raw outputs (losses) of the network.
