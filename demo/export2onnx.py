@@ -14,15 +14,9 @@ def main():
     parser = ArgumentParser()
     parser.add_argument('config', help='Config file')
     parser.add_argument('--input', help='input video file')
-    parser.add_argument('--output', help='output video file (mp4 format)')
     parser.add_argument('--checkpoint', help='Checkpoint file')
     parser.add_argument(
         '--device', default='cuda:0', help='Device used for inference')
-    parser.add_argument(
-        '--show',
-        action='store_true',
-        default=False,
-        help='whether to show visualizations.')
     parser.add_argument('--gt_bbox_file', help='The path of gt_bbox file')
     args = parser.parse_args()
 
