@@ -40,7 +40,7 @@ def main():
             break
 
     example_input = data
-    torch.onnx.export(model, example_input, "object_tracking_model.onnx", verbose=True)
+    torch.onnx.export(model, **example_input, "object_tracking_model.onnx", verbose=True)
 
 
 if __name__ == '__main__':
