@@ -39,7 +39,7 @@ def main():
             result, data = inference_sot(model, img, init_bbox, frame_id=i)
             break
 
-    scaling_factor = data['img_metas'][0][0].pop('scaling_factor', 1)
+    scaling_factor = data['img_metas'][0][0].pop('scaling_factor', None)
     print(f"scaling_factor={scaling_factor}")
     print(f"data={data}")
     dummy_img = torch.randn(1, 3, 224, 224)  # Example shape: (batch_size=1, channels=3, height=224, width=224)
