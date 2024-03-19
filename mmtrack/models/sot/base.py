@@ -157,15 +157,16 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
         search_img_metas = kwargs.pop('search_img_metas', None)
         return_loss = kwargs.pop('return_loss', True)
 
-        # Convert string back to int for export
-        img_metas[0]['frame_id'] = int(img_metas[0]['frame_id'])
-
+        # Print statements for debug purposes
         print(f"img={img}")
         print(f"img_metas={img_metas}")
         print(f"search_img={search_img}")
         print(f"search_img_metas={search_img_metas}")
         print(f"return_loss={return_loss}")
         print(f"kwargs={kwargs}")
+
+        # Convert string back to int for export
+        img_metas[0][0]['frame_id'] = int(img_metas[0][0]['frame_id'])
         if return_loss:
             return self.forward_train(
                 img,
