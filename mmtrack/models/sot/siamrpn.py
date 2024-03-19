@@ -367,6 +367,7 @@ class SiamRPN(BaseSingleObjectTracker):
         assert len(img) == 1, 'only support batch_size=1 when testing'
 
         test_mode = self.test_cfg.get('test_mode', 'OPE')
+        print(f"test_mode={test_mode}")
         assert test_mode in ['OPE', 'VOT']
         if test_mode == 'VOT':
             bbox_pred, best_score = self.simple_test_vot(
