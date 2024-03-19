@@ -315,6 +315,7 @@ class SiamRPN(BaseSingleObjectTracker):
 
         return bbox_pred, best_score
 
+    # On passe par ici pour les tests
     def simple_test_ope(self, img, frame_id, gt_bboxes):
         """Test using OPE test mode.
 
