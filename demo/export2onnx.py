@@ -35,11 +35,11 @@ def main():
 
     for i, img in enumerate(imgs):
         if i == 0:
-            result = inference_sot(model, img, init_bbox, frame_id=i)
+            result, data = inference_sot(model, img, init_bbox, frame_id=i)
             print(f"result={result}")
             break
 
-    example_input = 0
+    example_input = data
     torch.onnx.export(model, example_input, "object_tracking_model.onnx", verbose=True)
 
 

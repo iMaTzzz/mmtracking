@@ -142,30 +142,25 @@ def inference_sot(model, image, init_bbox, frame_id):
         img=image.astype(np.float32),
         gt_bboxes=np.array(init_bbox).astype(np.float32),
         img_info=dict(frame_id=frame_id))
-    print(f"Avant modifs data={data}")
     # remove the "LoadImageFromFile" and "LoadAnnotations" in pipeline
     test_pipeline = Compose(cfg.data.test.pipeline[2:])
     data = test_pipeline(data)
     data = collate([data], samples_per_gpu=1)
-    print(f"Après modifs mais avant CUDA data={data}")
     if next(model.parameters()).is_cuda:
         # scatter to specified GPU
         data = scatter(data, [device])[0]
-        print("if")
     else:
-        print("else")
         for m in model.modules():
             assert not isinstance(
                 m, RoIPool
             ), 'CPU inference with RoIPool is not supported currently.'
         # just get the actual data from DataContainer
         data['img_metas'] = data['img_metas'][0].data
-    print(f"Après modifs mais après CUDA data={data}")
 
     # forward the model
     with torch.no_grad():
         result = model(return_loss=False, rescale=True, **data)
-    return result
+    return result, data
 
 
 def inference_vid(model,
