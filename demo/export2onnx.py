@@ -42,7 +42,8 @@ def main():
 
     print(data)
     dummy_input = torch.randn(1, 3, 224, 224)  # Example shape: (batch_size, channels, height, width)
-    torch.onnx.export(model, (dummy_input, None), "object_tracking_model.onnx", verbose=True, dynamic_axes={'input': {2: 'height', 3: 'width'}})
+    dummy_img_metas = torch.randn(1, 3)  # Example shape: (batch_size, num_img_metas)
+    torch.onnx.export(model, (dummy_input, dummy_img_metas), "object_tracking_model.onnx", verbose=True, dynamic_axes={'input': {2: 'height', 3: 'width'}})
 
 
 if __name__ == '__main__':
