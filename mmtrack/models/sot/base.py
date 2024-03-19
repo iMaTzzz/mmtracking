@@ -99,7 +99,7 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
                 augs (multiscale, flip, etc.) and the inner list indicates
                 images in a batch.
         """
-        imgs = kwargs['imgs']
+        imgs = kwargs['img']
         img_metas = kwargs['img_metas']
         if isinstance(imgs, torch.Tensor):
             imgs = [imgs]
