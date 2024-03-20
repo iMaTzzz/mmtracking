@@ -49,7 +49,16 @@ def main():
     dynamic_axes = {'input0': {2: 'height', 3: 'width'},
                     'input1': {0: 'tl[x]', 1: 'tl[y]', 2: 'width', 3: 'height'}}
     #torch.onnx.export(model, (dummy_img, dummy_bbox, dummy_z_feat, dummy_avg_channel), "object_tracking_model.onnx", verbose=True, dynamic_axes=dynamic_axes)
-    torch.onnx.export(model, data, "object_tracking_model.onnx", verbose=True)
+    for key, value in data.items():
+        # Wrap the variable in a tuple to make it a single input argument
+        input_data = (value,)
+        try:
+            # Export the model
+            torch.onnx.export(model, input_data, f"model_with_{key}.onnx", verbose=True)
+            print(f"Model exported successfully with {key}.")
+        except Exception as e:
+            print(f"Error exporting model with {key}: {e}")
+    # torch.onnx.export(model, data, "object_tracking_model.onnx", verbose=True)
 
 
 if __name__ == '__main__':
