@@ -42,7 +42,7 @@ def main():
 
     dynamic_axes = {'input0': {2: 'height', 3: 'width'},
                     'input1': {0: 'tl[x]', 1: 'tl[y]', 2: 'width', 3: 'height'}}
-    model_name = "object_tracking_model.onnx"
+    model_name = "object_tracking_model_dynamic.onnx"
     print(f"data={data}")
     args = tuple(data.values())
     print(f"args={args}")
