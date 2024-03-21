@@ -42,6 +42,7 @@ def main():
     frame_id = data['img_metas'][0][0].pop('frame_id', None)
     print(f"frame_id={frame_id}")
     data.pop('img_metas')
+    print(f"data={data}")
     data['img'] = data['img'][0][0] 
     data['gt_bboxes'] = data['gt_bboxes'][0][0] 
     print(f"data={data}")
