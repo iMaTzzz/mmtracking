@@ -385,10 +385,10 @@ class SiamRPN(BaseSingleObjectTracker):
         print(f"best_score={best_score}")
         results = dict()
         if best_score == -1.:
-            results['track_bboxes'] = np.concatenate(
+            results['track_bboxes'] = torch.cat(
                 (bbox_pred.cpu().detach(), torch.tensor([best_score])))
         else:
-            results['track_bboxes'] = np.concatenate(
+            results['track_bboxes'] = torch.cat(
                 (bbox_pred.cpu().detach(), best_score.cpu().detach().unsqueeze(0)))
         print(f"results={results}")
         return results
