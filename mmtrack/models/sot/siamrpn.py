@@ -369,7 +369,7 @@ class SiamRPN(BaseSingleObjectTracker):
         """
         # frame_id = img_metas[0].get('frame_id', -1)
         # assert frame_id >= 0
-        assert len(img) == 1, 'only support batch_size=1 when testing'
+        # assert len(img) == 1, 'only support batch_size=1 when testing'
 
         test_mode = self.test_cfg.get('test_mode', 'OPE')
         print(f"test_mode={test_mode}")
