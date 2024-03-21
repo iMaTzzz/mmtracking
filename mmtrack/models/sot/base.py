@@ -103,13 +103,6 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
         return self.simple_test(img, gt_bboxes)
 
     @auto_fp16(apply_to=('img', 'search_img'))
-    # def forward(self,
-            # img,
-            # img_metas,
-            # search_img=None,
-            # search_img_metas=None,
-            # return_loss=True,
-            # **kwargs):
     def forward(self, data):
         """Calls either :func:`forward_train` or :func:`forward_test` depending
         on whether ``return_loss`` is ``True``.
