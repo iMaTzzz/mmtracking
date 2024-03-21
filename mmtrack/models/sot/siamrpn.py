@@ -153,10 +153,10 @@ class SiamRPN(BaseSingleObjectTracker):
         context_xmax = context_xmax.int()
         context_ymin = context_ymin.int()
         context_ymax = context_ymax.int()
-        print(f"context_xmin={context_xmin}")
-        print(f"context_xmax={context_xmax}")
-        print(f"context_ymin={context_ymin}")
-        print(f"context_ymax={context_ymax}")
+        #print(f"context_xmin={context_xmin}")
+        # print(f"context_xmax={context_xmax}")
+        # print(f"context_ymin={context_ymin}")
+        # print(f"context_ymax={context_ymax}")
 
         # left_pad = max(0, -context_xmin)
         # top_pad = max(0, -context_ymin)
@@ -179,14 +179,9 @@ class SiamRPN(BaseSingleObjectTracker):
         context_xmax +=  left_pad
         context_ymin += top_pad
         context_ymax += top_pad
-        # print(f"context_xmin={context_xmin}, _context_xmin={_context_xmin}")
-        # print(f"context_xmax={context_xmax}, _context_xmax={_context_xmax}")
-        # print(f"context_ymin={context_ymin}, _context_ymin={_context_ymin}")
-        # print(f"context_ymax={context_ymax}, _context_ymax={_context_ymax}")
+
 
         avg_channel = avg_channel[:, None, None]
-        _avg_channel = avg_channel.expand(N, -1, -1, -1)
-        print(f"avg_channel={avg_channel}, _avg_channel={_avg_channel}")
         if any([top_pad, bottom_pad, left_pad, right_pad]):
             new_img = img.new_zeros(N, C, H + top_pad + bottom_pad,
                                     W + left_pad + right_pad)
