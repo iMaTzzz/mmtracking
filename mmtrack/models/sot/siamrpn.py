@@ -15,6 +15,8 @@ from mmtrack.core.evaluation import bbox2region
 from ..builder import MODELS
 from .base import BaseSingleObjectTracker
 
+from functorch.experimental.control_flow import cond
+
 
 @MODELS.register_module()
 class SiamRPN(BaseSingleObjectTracker):
@@ -182,8 +184,8 @@ class SiamRPN(BaseSingleObjectTracker):
 
 
         avg_channel = avg_channel[:, None, None]
-        if top_pad or bottom_pad or left_pad or right_pad:
-        # if any([top_pad, bottom_pad, left_pad, right_pad]):
+        condition = top_pad or bottom_pad or left_pad or right_pad
+        def true_fn():
             new_img = img.new_zeros(N, C, H + top_pad + bottom_pad,
                                     W + left_pad + right_pad)
             new_img[..., top_pad:top_pad + H, left_pad:left_pad + W] = img
@@ -197,9 +199,10 @@ class SiamRPN(BaseSingleObjectTracker):
                 new_img[..., W + left_pad:] = avg_channel
             crop_img = new_img[..., context_ymin:context_ymax + 1,
                                context_xmin:context_xmax + 1]
-        else:
+        def false_fn():
             crop_img = img[..., context_ymin:context_ymax + 1,
                            context_xmin:context_xmax + 1]
+        crop_img = cond(condition, true_fn, false_fn)
 
         crop_img = torch.nn.functional.interpolate(
             crop_img,
