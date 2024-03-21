@@ -51,7 +51,8 @@ def main():
     #torch.onnx.export(model, (dummy_img, dummy_bbox, dummy_z_feat, dummy_avg_channel), "object_tracking_model.onnx", verbose=True, dynamic_axes=dynamic_axes)
     for key, value in data.items():
         # Wrap the variable in a tuple to make it a single input argument
-        input_data = (value,)
+        input_data = (value,) 
+        print(f"key={key}, value={value}, input_data={input_data}")
         try:
             # Export the model
             if key == 'img_metas':
