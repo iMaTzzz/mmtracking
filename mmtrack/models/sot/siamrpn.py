@@ -182,7 +182,8 @@ class SiamRPN(BaseSingleObjectTracker):
 
 
         avg_channel = avg_channel[:, None, None]
-        if any([top_pad, bottom_pad, left_pad, right_pad]):
+        if top_pad or bottom_pad or left_pad or right_pad:
+        # if any([top_pad, bottom_pad, left_pad, right_pad]):
             new_img = img.new_zeros(N, C, H + top_pad + bottom_pad,
                                     W + left_pad + right_pad)
             new_img[..., top_pad:top_pad + H, left_pad:left_pad + W] = img
