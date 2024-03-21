@@ -42,6 +42,8 @@ def main():
     frame_id = data['img_metas'][0][0].pop('frame_id', None)
     print(f"frame_id={frame_id}")
     data.pop('img_metas')
+    data['img'] = data['img'][0][0] 
+    data['gt_bboxes'] = data['gt_bboxes'][0][0] 
     print(f"data={data}")
     dummy_img = torch.randn(1, 3, 224, 224)  # Example shape: (batch_size=1, channels=3, height=224, width=224)
     dummy_bbox = torch.tensor([0, 0, 100, 100])  # Example bbox, shape: (4, )
