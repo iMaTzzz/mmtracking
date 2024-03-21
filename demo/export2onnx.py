@@ -52,19 +52,22 @@ def main():
     for key, value in data.items():
         # Wrap the variable in a tuple to make it a single input argument
         print(f"key={key}, value={value}")
-        try:
-            # Export the model
-            if key == 'img_metas':
+        # Export the model
+        if key == 'img_metas':
+            try:
                 input_data = value[0][0]
                 print(f"Modified input_data={input_data}")
                 for k, v in input_data.items():
                     print(f"key={k}, value={v}")
                     torch.onnx.export(model, v, f"model_with_{k}.onnx", verbose=True)
-            else:
+            except Exception as e:
+                print(f"Error exporting model with {k}: {e}")
+        else:
+            try:
                 torch.onnx.export(model, value, f"model_with_{key}.onnx", verbose=True)
-            print(f"Model exported successfully with {key}.")
-        except Exception as e:
-            print(f"Error exporting model with {key}: {e}")
+            except Exception as e:
+                print(f"Error exporting model with {key}: {e}")
+        print(f"Model exported successfully with {key}.")
     # torch.onnx.export(model, data, "object_tracking_model.onnx", verbose=True)
 
 
