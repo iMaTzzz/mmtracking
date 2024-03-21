@@ -157,6 +157,11 @@ def inference_sot(model, image, init_bbox, frame_id):
         # just get the actual data from DataContainer
         data['img_metas'] = data['img_metas'][0].data
 
+    data.pop('img_metas')
+    print(f"pre_data={data}")
+    data['img'] = data['img'][0].detach().cpu().squeeze()
+    data['gt_bboxes'] = data['gt_bboxes'][0].detach().cpu().squeeze()
+    print(f"post_data={data}")
     # forward the model
     with torch.no_grad():
         result = model(**data)
