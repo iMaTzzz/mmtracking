@@ -56,8 +56,9 @@ def main():
         try:
             # Export the model
             if key == 'img_metas':
+                input_data = input_data[0][0]
                 for k, v in input_data.items():
-                    torch.onnx.export(model, v, f"model_with_{key}.onnx", verbose=True)
+                    torch.onnx.export(model, v, f"model_with_{k}.onnx", verbose=True)
             else:
                 torch.onnx.export(model, input_data, f"model_with_{key}.onnx", verbose=True)
             print(f"Model exported successfully with {key}.")
