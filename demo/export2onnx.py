@@ -40,7 +40,9 @@ def main():
             break
 
     scaling_factor = data['img_metas'][0][0].pop('scale_factor', None)
+    pad_shape = data['img_metas'][0][0].pop('pad_shape', None)
     print(f"scaling_factor={scaling_factor}")
+    print(f"pad_shape={pad_shape}")
     print(f"data={data}")
     dummy_img = torch.randn(1, 3, 224, 224)  # Example shape: (batch_size=1, channels=3, height=224, width=224)
     dummy_bbox = torch.tensor([0, 0, 100, 100])  # Example bbox, shape: (4, )
