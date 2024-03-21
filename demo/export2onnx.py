@@ -43,7 +43,7 @@ def main():
     dynamic_axes = {'input0': {2: 'height', 3: 'width'},
                     'input1': {0: 'tl[x]', 1: 'tl[y]', 2: 'width', 3: 'height'}}
     model_name = "object_tracking_model.onnx"
-    torch.onnx.export(model, data, model_name, verbose=True, opset_version=11)
+    torch.onnx.export(model, **data, model_name, verbose=True, opset_version=15)
     onnx_model = onnx.load(model_name)
     onnx.checker.check_model(onnx_model)
 

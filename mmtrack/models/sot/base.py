@@ -98,6 +98,7 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
                 augs (multiscale, flip, etc.) and the inner list indicates
                 images in a batch.
         """
+        print(f"kwargs={kwargs}")
         img = kwargs['img']
         gt_bboxes = kwargs['gt_bboxes']
         return self.simple_test(img, gt_bboxes)
