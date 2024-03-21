@@ -159,6 +159,7 @@ def inference_sot(model, image, init_bbox, frame_id):
 
     data.pop('img_metas')
     print(f"pre_data={data}")
+    print(f"shape={data['img'].shape}")
     data['img'] = data['img'][0].detach().cpu().squeeze()
     print(f"shape={data['img'].shape}")
     data['gt_bboxes'] = data['gt_bboxes'][0].detach().cpu().squeeze()
