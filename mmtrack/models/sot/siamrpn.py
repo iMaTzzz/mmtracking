@@ -146,10 +146,10 @@ class SiamRPN(BaseSingleObjectTracker):
         context_ymin = center_xy[1] - crop_size // 2
         context_ymax = center_xy[1] + crop_size // 2
 
-        left_pad = torch.max(torch.tensor(0), -context_xmin)
-        top_pad = torch.max(torch.tensor(0), -context_ymin)
-        right_pad = torch.max(torch.tensor(0), context_xmax - W)
-        bottom_pad = torch.max(torch.tensor(0), context_ymax - H)
+        left_pad = torch.max(torch.tensor(0, device=img.device), -context_xmin)
+        top_pad = torch.max(torch.tensor(0, device=img.device), -context_ymin)
+        right_pad = torch.max(torch.tensor(0, device=img.device), context_xmax - W)
+        bottom_pad = torch.max(torch.tensor(0, device=img.device), context_ymax - H)
 
         context_xmin += left_pad
         context_xmax += left_pad

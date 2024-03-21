@@ -158,12 +158,12 @@ def inference_sot(model, image, init_bbox, frame_id):
         data['img_metas'] = data['img_metas'][0].data
 
     data.pop('img_metas')
-    print(f"pre_data={data}")
-    print(f"shape={data['img'][0].shape}")
+    # print(f"pre_data={data}")
+    # print(f"shape={data['img'][0].shape}")
     data['img'] = data['img'][0]
-    print(f"shape={data['img'].shape}")
+    # print(f"shape={data['img'].shape}")
     data['gt_bboxes'] = data['gt_bboxes'][0]
-    print(f"post_data={data}")
+    # print(f"post_data={data}")
     # forward the model
     with torch.no_grad():
         result = model(data)
