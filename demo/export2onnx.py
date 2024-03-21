@@ -46,9 +46,11 @@ def main():
     print(f"data={data}")
     args = tuple(data.values())
     print(f"args={args}")
-    torch.onnx.dynamo_export(model, args, model_name, verbose=True)
-    onnx_model = onnx.load(model_name)
-    onnx.checker.check_model(onnx_model)
+    export_options = torch.onnx.ExportOptions(dynamic_shapes=True)
+    onnx_model = torch.onnx.dynamo_export(model, args, export_options=export_options)
+    onnx_model.save(model_name)
+    # onnx_model = onnx.load(model_name)
+    # onnx.checker.check_model(onnx_model)
 
 
 if __name__ == '__main__':
