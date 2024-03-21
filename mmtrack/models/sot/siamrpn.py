@@ -192,8 +192,9 @@ class SiamRPN(BaseSingleObjectTracker):
         # print(f"bottom_pad={bottom_pad}")
 
         avg_channel = avg_channel[:, None, None]
-        condition = torch.any(torch.cat((top_pad.reshape(1), bottom_pad.reshape(1), left_pad.reshape(1), right_pad.reshape(1))))
-        def true_fn():
+        all_pads_reshaped = (top_pad.reshape(1), bottom_pad.reshape(1), left_pad.reshape(1), right_pad.reshape(1))
+        condition = torch.any(torch.cat(all_pads_reshaped))
+        def true_fn(top_pad, bottom_pad, left_pad, right_pad):
             new_img = img.new_zeros(N, C, H + top_pad + bottom_pad,
                                     W + left_pad + right_pad)
             new_img[..., top_pad:top_pad + H, left_pad:left_pad + W] = img
@@ -207,10 +208,10 @@ class SiamRPN(BaseSingleObjectTracker):
                 new_img[..., W + left_pad:] = avg_channel
             return  new_img[..., context_ymin:context_ymax + 1,
                                context_xmin:context_xmax + 1]
-        def false_fn():
+        def false_fn(top_pad, bottom_pad, left_pad, right_pad):
             return img[..., context_ymin:context_ymax + 1,
                            context_xmin:context_xmax + 1]
-        crop_img = cond(condition, true_fn, false_fn, [])
+        crop_img = cond(condition, true_fn, false_fn, all_pads_reshaped)
         crop_img = torch.nn.functional.interpolate(
             crop_img,
             size=(target_size, target_size),
