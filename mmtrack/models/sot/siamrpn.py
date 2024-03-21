@@ -336,7 +336,7 @@ class SiamRPN(BaseSingleObjectTracker):
                 and the score of initial frame is -1.
         """
         if self.frame_id == 0:
-            # gt_bboxes = gt_bboxes[0][0]
+            gt_bboxes = gt_bboxes[0]
             self.memo = Dict()
             self.memo.bbox = quad2bbox(gt_bboxes)
             self.memo.z_feat, self.memo.avg_channel = self.init(
