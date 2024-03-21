@@ -44,7 +44,9 @@ def main():
                     'input1': {0: 'tl[x]', 1: 'tl[y]', 2: 'width', 3: 'height'}}
     model_name = "object_tracking_model.onnx"
     print(f"data={data}")
-    torch.onnx.export(model, **data, model_name, verbose=True, opset_version=15)
+    args = tuple(data.values())
+    print(f"args={args}")
+    torch.onnx.export(model, **data, model_name, verbose=True)
     onnx_model = onnx.load(model_name)
     onnx.checker.check_model(onnx_model)
 
