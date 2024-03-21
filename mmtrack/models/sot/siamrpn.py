@@ -386,10 +386,10 @@ class SiamRPN(BaseSingleObjectTracker):
         results = dict()
         if best_score == -1.:
             results['track_bboxes'] = np.concatenate(
-                (bbox_pred.cpu().detach().numpy(), np.array([best_score])))
+                (bbox_pred.cpu().detach(), torch.tensor([best_score])))
         else:
             results['track_bboxes'] = np.concatenate(
-                (bbox_pred.cpu().detach().numpy(), best_score.cpu().detach().numpy()[None]))
+                (bbox_pred.cpu().detach(), best_score.cpu().detach()))
         return results
 
     def forward_train(self, img, img_metas, gt_bboxes, search_img,
