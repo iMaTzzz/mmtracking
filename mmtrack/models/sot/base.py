@@ -116,7 +116,7 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
         """
         # Print statements for debug purposes
         print(f"data={data}")
-        return self.forward_test(**data)
+        return self.forward_test(data)
 
     def _parse_losses(self, losses):
         """Parse the raw outputs (losses) of the network.
