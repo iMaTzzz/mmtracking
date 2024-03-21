@@ -58,6 +58,7 @@ def main():
                 input_data = value[0][0]
                 print(f"Modified input_data={input_data}")
                 for k, v in input_data.items():
+                    print(f"key={k}, value={v}")
                     torch.onnx.export(model, v, f"model_with_{k}.onnx", verbose=True)
             else:
                 torch.onnx.export(model, value, f"model_with_{key}.onnx", verbose=True)
