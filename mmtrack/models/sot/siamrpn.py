@@ -137,15 +137,19 @@ class SiamRPN(BaseSingleObjectTracker):
             resized cropped image.
         """
         N, C, H, W = img.shape
-        context_xmin = int(center_xy[0] - crop_size / 2)
-        context_xmax = int(center_xy[0] + crop_size / 2)
-        context_ymin = int(center_xy[1] - crop_size / 2)
-        context_ymax = int(center_xy[1] + crop_size / 2)
+        # context_xmin = int(center_xy[0] - crop_size / 2)
+        # context_xmax = int(center_xy[0] + crop_size / 2)
+        # context_ymin = int(center_xy[1] - crop_size / 2)
+        # context_ymax = int(center_xy[1] + crop_size / 2)
+        context_xmin = center_xy[0] - crop_size // 2
+        context_xmax = center_xy[0] + crop_size // 2
+        context_ymin = center_xy[1] - crop_size // 2
+        context_ymax = center_xy[1] + crop_size // 2
 
-        left_pad = max(0, -context_xmin)
-        top_pad = max(0, -context_ymin)
-        right_pad = max(0, context_xmax - W)
-        bottom_pad = max(0, context_ymax - H)
+        left_pad = torch.max(torch.tensor(0), -context_xmin)
+        top_pad = torch.max(torch.tensor(0), -context_ymin)
+        right_pad = torch.max(torch.tensor(0), context_xmax - W)
+        bottom_pad = torch.max(torch.tensor(0), context_ymax - H)
 
         context_xmin += left_pad
         context_xmax += left_pad
