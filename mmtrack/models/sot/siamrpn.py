@@ -186,10 +186,10 @@ class SiamRPN(BaseSingleObjectTracker):
         context_ymin += top_pad
         context_ymax += top_pad
 
-        print(f"left_pad={left_pad}")
-        print(f"top_pad={top_pad}")
-        print(f"right_pad={right_pad}")
-        print(f"bottom_pad={bottom_pad}")
+        # print(f"left_pad={left_pad}")
+        # print(f"top_pad={top_pad}")
+        # print(f"right_pad={right_pad}")
+        # print(f"bottom_pad={bottom_pad}")
 
         avg_channel = avg_channel[:, None, None]
         if torch.any(torch.cat((top_pad.reshape(1), bottom_pad.reshape(1), left_pad.reshape(1), right_pad.reshape(1)))):
