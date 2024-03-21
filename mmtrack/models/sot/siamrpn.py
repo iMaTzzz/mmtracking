@@ -202,7 +202,11 @@ class SiamRPN(BaseSingleObjectTracker):
         def false_fn():
             return img[..., context_ymin:context_ymax + 1,
                            context_xmin:context_xmax + 1]
-        crop_img = cond(condition, true_fn, false_fn)
+        # crop_img = cond(condition, true_fn, false_fn)
+        if condition:
+            crop_img = true_fn()
+        else:
+            crop_img = false_fn()
 
         crop_img = torch.nn.functional.interpolate(
             crop_img,
