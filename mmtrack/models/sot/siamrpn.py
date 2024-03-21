@@ -205,7 +205,7 @@ class SiamRPN(BaseSingleObjectTracker):
         z_width = bbox[2] + self.test_cfg.context_amount * (bbox[2] + bbox[3])
         z_height = bbox[3] + self.test_cfg.context_amount * (bbox[2] + bbox[3])
         z_size = torch.round(torch.sqrt(z_width * z_height))
-        avg_channel = torch.mean(img, dim=(1, 2))
+        avg_channel = torch.mean(img, dim=(0, 2, 3))
         z_crop = self.get_cropped_img(img, bbox[0:2],
                                       self.test_cfg.exemplar_size, z_size,
                                       avg_channel)
