@@ -141,10 +141,10 @@ class SiamRPN(BaseSingleObjectTracker):
         context_xmax = int(center_xy[0] + crop_size / 2)
         context_ymin = int(center_xy[1] - crop_size / 2)
         context_ymax = int(center_xy[1] + crop_size / 2)
-        _context_xmin = center_xy[0] - crop_size // 2
-        _context_xmax = center_xy[0] + crop_size // 2
-        _context_ymin = center_xy[1] - crop_size // 2
-        _context_ymax = center_xy[1] + crop_size // 2
+        _context_xmin = center_xy[0] - crop_size / 2
+        _context_xmax = center_xy[0] + crop_size / 2
+        _context_ymin = center_xy[1] - crop_size / 2
+        _context_ymax = center_xy[1] + crop_size / 2
         print(f"context_xmin={context_xmin}, _context_xmin={_context_xmin}")
         print(f"context_xmax={context_xmax}, _context_xmax={_context_xmax}")
         print(f"context_ymin={context_ymin}, _context_ymin={_context_ymin}")
@@ -154,10 +154,10 @@ class SiamRPN(BaseSingleObjectTracker):
         top_pad = max(0, -context_ymin)
         right_pad = max(0, context_xmax - W)
         bottom_pad = max(0, context_ymax - H)
-        _left_pad = torch.clamp(-context_xmin, min=0)
-        _top_pad = torch.clamp(-context_ymin, min=0)
-        _right_pad = torch.clamp(context_xmax - W, min=0)
-        _bottom_pad = torch.clamp(context_ymax - H, min=0)
+        _left_pad = torch.max(-context_xmin, torch.tensor(0, device=img.device))
+        _top_pad = torch.max(-context_ymin, torch.tensor(0, device=img.device))
+        _right_pad = torch.max(context_xmax - W, torch.tensor(0, device=img.device))
+        _bottom_pad = torch.max(context_ymax - H, torch.tensor(0, device=img.device))
         print(f"left_pad={left_pad}, _left_pad={_left_pad}")
         print(f"top_pad={top_pad}, _top_pad={_top_pad}")
         print(f"right_pad={right_pad}, _right_pad={_right_pad}")
