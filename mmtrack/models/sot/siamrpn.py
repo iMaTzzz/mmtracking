@@ -114,8 +114,7 @@ class SiamRPN(BaseSingleObjectTracker):
             x_feat = self.neck(x_feat)
         return x_feat
 
-    def get_cropped_img(self, img, center_xy, target_size, crop_size,
-                        avg_channel):
+    def get_cropped_img(self, img, center_xy, target_size, crop_size, avg_channel):
         """Crop image.
 
         Only used during testing.
@@ -139,10 +138,11 @@ class SiamRPN(BaseSingleObjectTracker):
             resized cropped image.
         """
         N, C, H, W = img.shape
-        # context_xmin = int(center_xy[0] - crop_size / 2)
-        # context_xmax = int(center_xy[0] + crop_size / 2)
-        # context_ymin = int(center_xy[1] - crop_size / 2)
-        # context_ymax = int(center_xy[1] + crop_size / 2)
+        torch._constrain_as_size(N, min=1, max=1)
+        torch._constrain_as_size(C, min=3, max=3)
+        torch._constrain_as_size(H, min=0)
+        torch._constrain_as_size(W, min=0)
+
         context_xmin = center_xy[0] - crop_size / 2
         context_xmax = center_xy[0] + crop_size / 2
         context_ymin = center_xy[1] - crop_size / 2
@@ -190,6 +190,10 @@ class SiamRPN(BaseSingleObjectTracker):
         # print(f"top_pad={top_pad}")
         # print(f"right_pad={right_pad}")
         # print(f"bottom_pad={bottom_pad}")
+        torch._constrain_as_size(left_pad, min=0)
+        torch._constrain_as_size(top_pad, min=0)
+        torch._constrain_as_size(right_pad, min=0)
+        torch._constrain_as_size(bottom_pad, min=0)
 
         avg_channel = avg_channel[:, None, None]
         all_pads_reshaped = (top_pad.reshape(1), bottom_pad.reshape(1), left_pad.reshape(1), right_pad.reshape(1))
