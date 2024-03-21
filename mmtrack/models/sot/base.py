@@ -88,7 +88,7 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
         """Test function with test time augmentation."""
         pass
 
-    def forward_test(self, **kwargs):
+    def forward_test(self, data):
         """
         Args:
             imgs (List[Tensor]): the outer list indicates test-time
@@ -98,13 +98,13 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
                 augs (multiscale, flip, etc.) and the inner list indicates
                 images in a batch.
         """
-        print(f"kwargs={kwargs}")
-        img = kwargs['img']
-        gt_bboxes = kwargs['gt_bboxes']
+        print(f"data={data}")
+        img = data['img']
+        gt_bboxes = data['gt_bboxes']
         return self.simple_test(img, gt_bboxes)
 
     @auto_fp16(apply_to=('img', 'search_img'))
-    def forward(self, **kwargs):
+    def forward(self, data):
         """Calls either :func:`forward_train` or :func:`forward_test` depending
         on whether ``return_loss`` is ``True``.
 
@@ -115,8 +115,8 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
         the outer list indicating test time augmentations.
         """
         # Print statements for debug purposes
-        print(f"kwargs={kwargs}")
-        return self.forward_test(**kwargs)
+        print(f"data={data}")
+        return self.forward_test(**data)
 
     def _parse_losses(self, losses):
         """Parse the raw outputs (losses) of the network.
