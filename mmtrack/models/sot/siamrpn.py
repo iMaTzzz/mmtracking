@@ -192,7 +192,7 @@ class SiamRPN(BaseSingleObjectTracker):
         # print(f"bottom_pad={bottom_pad}")
 
         avg_channel = avg_channel[:, None, None]
-        condition = torch.any(torch.cat((top_pad.reshape(1), bottom_pad.reshape(1), left_pad.reshape(1), right_pad.reshape(1)))):
+        condition = torch.any(torch.cat((top_pad.reshape(1), bottom_pad.reshape(1), left_pad.reshape(1), right_pad.reshape(1))))
         def true_fn():
             new_img = img.new_zeros(N, C, H + top_pad + bottom_pad,
                                     W + left_pad + right_pad)
