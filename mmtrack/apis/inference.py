@@ -159,7 +159,7 @@ def inference_sot(model, image, init_bbox, frame_id):
 
     # forward the model
     with torch.no_grad():
-        result = model(return_loss=False, rescale=True, **data)
+        result = model(**data)
     return result, data
 
 
