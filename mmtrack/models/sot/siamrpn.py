@@ -197,10 +197,10 @@ class SiamRPN(BaseSingleObjectTracker):
                 new_img[..., :left_pad] = avg_channel
             if right_pad:
                 new_img[..., W + left_pad:] = avg_channel
-            crop_img = new_img[..., context_ymin:context_ymax + 1,
+            return new_img[..., context_ymin:context_ymax + 1,
                                context_xmin:context_xmax + 1]
         def false_fn():
-            crop_img = img[..., context_ymin:context_ymax + 1,
+            return img[..., context_ymin:context_ymax + 1,
                            context_xmin:context_xmax + 1]
         crop_img = cond(condition, true_fn, false_fn)
 
