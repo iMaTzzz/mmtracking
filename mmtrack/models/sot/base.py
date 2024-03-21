@@ -112,8 +112,8 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
         the outer list indicating test time augmentations.
         """
         # Print statements for debug purposes
-        print(f"img={img}")
-        print(f"gt_bboxes={gt_bboxes}")
+        # print(f"img={img}")
+        # print(f"gt_bboxes={gt_bboxes}")
         return self.forward_test(img, gt_bboxes)
 
     def _parse_losses(self, losses):

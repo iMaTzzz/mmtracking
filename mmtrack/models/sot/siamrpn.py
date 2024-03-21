@@ -401,7 +401,7 @@ class SiamRPN(BaseSingleObjectTracker):
         # assert len(img) == 1, 'only support batch_size=1 when testing'
 
         test_mode = self.test_cfg.get('test_mode', 'OPE')
-        print(f"test_mode={test_mode}")
+        # print(f"test_mode={test_mode}")
         assert test_mode in ['OPE', 'VOT']
         if test_mode == 'VOT':
             bbox_pred, best_score = self.simple_test_vot(
@@ -410,8 +410,8 @@ class SiamRPN(BaseSingleObjectTracker):
             bbox_pred, best_score = self.simple_test_ope(
                 img, gt_bboxes)
 
-        print(f"bbox_pred={bbox_pred}")
-        print(f"best_score={best_score}")
+        # print(f"bbox_pred={bbox_pred}")
+        # print(f"best_score={best_score}")
         results = dict()
         if best_score == -1.:
             results['track_bboxes'] = torch.cat(
@@ -419,7 +419,7 @@ class SiamRPN(BaseSingleObjectTracker):
         else:
             results['track_bboxes'] = torch.cat(
                 (bbox_pred.cpu().detach(), best_score.cpu().detach().unsqueeze(0)))
-        print(f"results={results}")
+        # print(f"results={results}")
         return results
 
     def forward_train(self, img, img_metas, gt_bboxes, search_img,
