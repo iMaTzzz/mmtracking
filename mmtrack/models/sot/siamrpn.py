@@ -400,15 +400,16 @@ class SiamRPN(BaseSingleObjectTracker):
         # assert frame_id >= 0
         # assert len(img) == 1, 'only support batch_size=1 when testing'
 
-        test_mode = self.test_cfg.get('test_mode', 'OPE')
-        # print(f"test_mode={test_mode}")
-        assert test_mode in ['OPE', 'VOT']
-        if test_mode == 'VOT':
-            bbox_pred, best_score = self.simple_test_vot(
-                img, gt_bboxes)
-        else:
-            bbox_pred, best_score = self.simple_test_ope(
-                img, gt_bboxes)
+        # test_mode = self.test_cfg.get('test_mode', 'OPE')
+        # # print(f"test_mode={test_mode}")
+        # assert test_mode in ['OPE', 'VOT']
+        # if test_mode == 'VOT':
+            # bbox_pred, best_score = self.simple_test_vot(
+                # img, gt_bboxes)
+        # else:
+            # bbox_pred, best_score = self.simple_test_ope(
+                # img, gt_bboxes)
+        bbox_pred, best_score = self.simple_test_ope(img, gt_bboxes)
 
         # print(f"bbox_pred={bbox_pred}")
         # print(f"best_score={best_score}")
