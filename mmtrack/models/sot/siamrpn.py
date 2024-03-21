@@ -167,10 +167,10 @@ class SiamRPN(BaseSingleObjectTracker):
         context_xmax += left_pad
         context_ymin += top_pad
         context_ymax += top_pad
-        _context_xmin = torch.clamp(context_xmin + left_pad, min=0)
-        _context_xmax = torch.clamp(context_xmax + left_pad, max=W)
-        _context_ymin = torch.clamp(context_ymin + top_pad, min=0)
-        _context_ymax = torch.clamp(context_ymax + top_pad, max=H)
+        _context_xmin += _left_pad
+        _context_xmax =  _left_pad
+        _context_ymin = _top_pad
+        _context_ymax = _top_pad
         print(f"context_xmin={context_xmin}, _context_xmin={_context_xmin}")
         print(f"context_xmax={context_xmax}, _context_xmax={_context_xmax}")
         print(f"context_ymin={context_ymin}, _context_ymin={_context_ymin}")
