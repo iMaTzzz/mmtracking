@@ -42,10 +42,10 @@ def main():
     frame_id = data['img_metas'][0][0].pop('frame_id', None)
     print(f"frame_id={frame_id}")
     data.pop('img_metas')
-    print(f"data={data}")
-    data['img'] = data['img'][0][0] 
-    data['gt_bboxes'] = data['gt_bboxes'][0][0] 
-    print(f"data={data}")
+    print(f"pre_data={data}")
+    data['img'] = data['img'][0].detach().cpu().numpy()
+    data['gt_bboxes'] = data['gt_bboxes'][0].detach().cpu().numpy()
+    print(f"post_data={data}")
     dummy_img = torch.randn(1, 3, 224, 224)  # Example shape: (batch_size=1, channels=3, height=224, width=224)
     dummy_bbox = torch.tensor([0, 0, 100, 100])  # Example bbox, shape: (4, )
     dummy_z_feat = (torch.randn(1, 64, 32, 32), torch.randn(1, 128, 16, 16))  # Example shapes
