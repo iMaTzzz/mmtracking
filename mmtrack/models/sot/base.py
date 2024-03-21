@@ -151,8 +151,6 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
         should be double nested (i.e.  List[Tensor], List[List[dict]]), with
         the outer list indicating test time augmentations.
         """
-        print("On passe bien ici !")
-        return 0
         img = kwargs.pop('img')
         img_metas = kwargs.pop('img_metas')
         search_img = kwargs.pop('search_img', None)

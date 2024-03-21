@@ -39,10 +39,10 @@ def main():
             result, data = inference_sot(model, img, init_bbox, frame_id=i)
             break
 
-    scaling_factor = data['img_metas'][0][0].pop('scale_factor', None)
-    pad_shape = data['img_metas'][0][0].pop('pad_shape', None)
-    print(f"scaling_factor={scaling_factor}")
-    print(f"pad_shape={pad_shape}")
+    frame_id = data['img_metas'][0][0].pop('frame_id', None)
+    print(f"frame_id={frame_id}")
+    data.pop('img_metas')
+    data['frame_id'] = frame_id
     print(f"data={data}")
     dummy_img = torch.randn(1, 3, 224, 224)  # Example shape: (batch_size=1, channels=3, height=224, width=224)
     dummy_bbox = torch.tensor([0, 0, 100, 100])  # Example bbox, shape: (4, )
@@ -51,26 +51,26 @@ def main():
     dynamic_axes = {'input0': {2: 'height', 3: 'width'},
                     'input1': {0: 'tl[x]', 1: 'tl[y]', 2: 'width', 3: 'height'}}
     #torch.onnx.export(model, (dummy_img, dummy_bbox, dummy_z_feat, dummy_avg_channel), "object_tracking_model.onnx", verbose=True, dynamic_axes=dynamic_axes)
-    for key, value in data.items():
-        # Wrap the variable in a tuple to make it a single input argument
-        print(f"key={key}, value={value}")
-        # Export the model
-        if key == 'img_metas':
-            try:
-                input_data = value[0][0]
-                print(f"Modified input_data={input_data}")
-                for k, v in input_data.items():
-                    print(f"key={k}, value={v}")
-                    torch.onnx.export(model, v, f"model_with_{k}.onnx", verbose=True)
-            except Exception as e:
-                print(f"Error exporting model with {k}: {e}")
-        else:
-            try:
-                torch.onnx.export(model, value, f"model_with_{key}.onnx", verbose=True)
-            except Exception as e:
-                print(f"Error exporting model with {key}: {e}")
-        print(f"Model exported successfully with {key}.")
-    # torch.onnx.export(model, data, "object_tracking_model.onnx", verbose=True)
+    #for key, value in data.items():
+        ## Wrap the variable in a tuple to make it a single input argument
+        #print(f"key={key}, value={value}")
+        ## Export the model
+        #if key == 'img_metas':
+            #try:
+                #input_data = value[0][0]
+                #print(f"Modified input_data={input_data}")
+                #for k, v in input_data.items():
+                    #print(f"key={k}, value={v}")
+                    #torch.onnx.export(model, v, f"model_with_{k}.onnx", verbose=True)
+            #except Exception as e:
+                #print(f"Error exporting model with {k}: {e}")
+        #else:
+            #try:
+                #torch.onnx.export(model, value, f"model_with_{key}.onnx", verbose=True)
+            #except Exception as e:
+                #print(f"Error exporting model with {key}: {e}")
+        #print(f"Model exported successfully with {key}.")
+    torch.onnx.export(model, data, "object_tracking_model.onnx", verbose=True)
 
 
 if __name__ == '__main__':
