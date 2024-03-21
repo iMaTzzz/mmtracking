@@ -381,6 +381,8 @@ class SiamRPN(BaseSingleObjectTracker):
             bbox_pred, best_score = self.simple_test_ope(
                 img, gt_bboxes)
 
+        print(f"bbox_pred={bbox_pred}")
+        print(f"best_score={best_score}")
         results = dict()
         if best_score == -1.:
             results['track_bboxes'] = np.concatenate(
