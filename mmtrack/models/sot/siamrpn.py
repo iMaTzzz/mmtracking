@@ -350,7 +350,7 @@ class SiamRPN(BaseSingleObjectTracker):
 
         return bbox_pred, best_score
 
-    def simple_test(self, img, img_metas, gt_bboxes, **kwargs):
+    def simple_test(self, img, gt_bboxes):
         """Test without augmentation.
 
         Args:
@@ -376,7 +376,7 @@ class SiamRPN(BaseSingleObjectTracker):
         assert test_mode in ['OPE', 'VOT']
         if test_mode == 'VOT':
             bbox_pred, best_score = self.simple_test_vot(
-                img, gt_bboxes, img_metas)
+                img, gt_bboxes)
         else:
             bbox_pred, best_score = self.simple_test_ope(
                 img, gt_bboxes)

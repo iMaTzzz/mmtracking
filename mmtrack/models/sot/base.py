@@ -88,7 +88,7 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
         """Test function with test time augmentation."""
         pass
 
-    def forward_test(self, imgs, img_metas, **kwargs):
+    def forward_test(self, data):
         """
         Args:
             imgs (List[Tensor]): the outer list indicates test-time
@@ -98,40 +98,9 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
                 augs (multiscale, flip, etc.) and the inner list indicates
                 images in a batch.
         """
-        if isinstance(imgs, torch.Tensor):
-            imgs = [imgs]
-        elif not isinstance(imgs, list):
-            raise TypeError(
-                f'imgs must be a list or tensor, but got {type(imgs)}')
-
-        assert isinstance(img_metas, list)
-        if isinstance(img_metas[0], dict):
-            img_metas = [img_metas]
-        elif not isinstance(img_metas[0], list):
-            raise TypeError(
-                'img_metas must be a List[List[dict]] or List[dict]')
-
-        num_augs = len(imgs)
-        if num_augs != len(img_metas):
-            raise ValueError(f'num of augmentations ({len(imgs)}) '
-                             f'!= num of image meta ({len(img_metas)})')
-
-        if num_augs == 1:
-            # proposals (List[List[Tensor]]): the outer list indicates
-            # test-time augs (multiscale, flip, etc.) and the inner list
-            # indicates images in a batch.
-            # The Tensor should have a shape Px4, where P is the number of
-            # proposals.
-            if 'proposals' in kwargs:
-                kwargs['proposals'] = kwargs['proposals'][0]
-            return self.simple_test(imgs[0], img_metas[0], **kwargs)
-        else:
-            assert imgs[0].size(0) == 1, 'aug test does not support ' \
-                                         'inference with batch size ' \
-                                         f'{imgs[0].size(0)}'
-            # TODO: support test augmentation for predefined proposals
-            assert 'proposals' not in kwargs
-            return self.aug_test(imgs, img_metas, **kwargs)
+        img = data['img']
+        gt_bboxes = data['gt_bboxes']
+        return self.simple_test(img, gt_bboxes)
 
     @auto_fp16(apply_to=('img', 'search_img'))
     # def forward(self,
@@ -141,7 +110,7 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
             # search_img_metas=None,
             # return_loss=True,
             # **kwargs):
-    def forward(self, **kwargs):
+    def forward(self, data):
         """Calls either :func:`forward_train` or :func:`forward_test` depending
         on whether ``return_loss`` is ``True``.
 
@@ -151,31 +120,9 @@ class BaseSingleObjectTracker(BaseModule, metaclass=ABCMeta):
         should be double nested (i.e.  List[Tensor], List[List[dict]]), with
         the outer list indicating test time augmentations.
         """
-        img = kwargs.pop('img')
-        img_metas = kwargs.pop('img_metas')
-        search_img = kwargs.pop('search_img', None)
-        search_img_metas = kwargs.pop('search_img_metas', None)
-        return_loss = kwargs.pop('return_loss', True)
-
         # Print statements for debug purposes
-        print(f"img={img}")
-        print(f"img_metas={img_metas}")
-        print(f"search_img={search_img}")
-        print(f"search_img_metas={search_img_metas}")
-        print(f"return_loss={return_loss}")
-        print(f"kwargs={kwargs}")
-
-        # Convert string back to int for export
-        img_metas[0][0]['frame_id'] = int(img_metas[0][0]['frame_id'])
-        if return_loss:
-            return self.forward_train(
-                img,
-                img_metas,
-                search_img=search_img,
-                search_img_metas=search_img_metas,
-                **kwargs)
-        else:
-            return self.forward_test(img, img_metas, **kwargs)
+        print(f"data={data}")
+        return self.forward_test(data)
 
     def _parse_losses(self, losses):
         """Parse the raw outputs (losses) of the network.
