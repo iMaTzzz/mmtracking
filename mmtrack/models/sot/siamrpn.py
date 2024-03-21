@@ -56,6 +56,8 @@ class SiamRPN(BaseSingleObjectTracker):
         if frozen_modules is not None:
             self.freeze_module(frozen_modules)
 
+        self.frame_id = 0
+
     def init_weights(self):
         """Initialize the weights of modules in single object tracker."""
         # We don't use the `init_weights()` function in BaseModule, since it
@@ -208,6 +210,7 @@ class SiamRPN(BaseSingleObjectTracker):
                                       self.test_cfg.exemplar_size, z_size,
                                       avg_channel)
         z_feat = self.forward_template(z_crop)
+        self.frame_id += 1
         return z_feat, avg_channel
 
     def track(self, img, bbox, z_feat, avg_channel):
@@ -246,6 +249,7 @@ class SiamRPN(BaseSingleObjectTracker):
 
         # clip boundary
         best_bbox = self._bbox_clip(best_bbox, img.shape[2], img.shape[3])
+        self.frame_id += 1
         return best_score, best_bbox
 
     def simple_test_vot(self, img, frame_id, gt_bboxes, img_metas=None):
@@ -316,7 +320,7 @@ class SiamRPN(BaseSingleObjectTracker):
         return bbox_pred, best_score
 
     # On passe par ici pour les tests
-    def simple_test_ope(self, img, frame_id, gt_bboxes):
+    def simple_test_ope(self, img, gt_bboxes):
         """Test using OPE test mode.
 
         Args:
@@ -331,7 +335,7 @@ class SiamRPN(BaseSingleObjectTracker):
             best_score (Tensor): the tracking bbox confidence in range [0,1],
                 and the score of initial frame is -1.
         """
-        if frame_id == 0:
+        if self.frame_id == 0:
             gt_bboxes = gt_bboxes[0][0]
             self.memo = Dict()
             self.memo.bbox = quad2bbox(gt_bboxes)
@@ -363,8 +367,8 @@ class SiamRPN(BaseSingleObjectTracker):
         Returns:
             dict[str : ndarray]: The tracking results.
         """
-        frame_id = img_metas[0].get('frame_id', -1)
-        assert frame_id >= 0
+        # frame_id = img_metas[0].get('frame_id', -1)
+        # assert frame_id >= 0
         assert len(img) == 1, 'only support batch_size=1 when testing'
 
         test_mode = self.test_cfg.get('test_mode', 'OPE')
@@ -372,10 +376,10 @@ class SiamRPN(BaseSingleObjectTracker):
         assert test_mode in ['OPE', 'VOT']
         if test_mode == 'VOT':
             bbox_pred, best_score = self.simple_test_vot(
-                img, frame_id, gt_bboxes, img_metas)
+                img, gt_bboxes, img_metas)
         else:
             bbox_pred, best_score = self.simple_test_ope(
-                img, frame_id, gt_bboxes)
+                img, gt_bboxes)
 
         results = dict()
         if best_score == -1.:
