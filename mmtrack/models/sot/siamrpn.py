@@ -168,9 +168,9 @@ class SiamRPN(BaseSingleObjectTracker):
         context_ymin += top_pad
         context_ymax += top_pad
         _context_xmin += _left_pad
-        _context_xmax =  _left_pad
-        _context_ymin = _top_pad
-        _context_ymax = _top_pad
+        _context_xmax +=  _left_pad
+        _context_ymin += _top_pad
+        _context_ymax += _top_pad
         print(f"context_xmin={context_xmin}, _context_xmin={_context_xmin}")
         print(f"context_xmax={context_xmax}, _context_xmax={_context_xmax}")
         print(f"context_ymin={context_ymin}, _context_ymin={_context_ymin}")
