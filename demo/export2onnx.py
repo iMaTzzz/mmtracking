@@ -70,7 +70,7 @@ def main():
             #except Exception as e:
                 #print(f"Error exporting model with {key}: {e}")
         #print(f"Model exported successfully with {key}.")
-    torch.onnx.export(model, data, "object_tracking_model.onnx", verbose=True, opset_version=10)
+    torch.onnx.export(model, data, "object_tracking_model.onnx", verbose=True, opset_version=11)
 
 
 if __name__ == '__main__':
