@@ -390,6 +390,7 @@ class SiamRPN(BaseSingleObjectTracker):
         else:
             results['track_bboxes'] = np.concatenate(
                 (bbox_pred.cpu().detach(), best_score.cpu().detach().unsqueeze(0)))
+        print(f"results={results}")
         return results
 
     def forward_train(self, img, img_metas, gt_bboxes, search_img,
