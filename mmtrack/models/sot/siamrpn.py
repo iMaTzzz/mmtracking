@@ -141,10 +141,10 @@ class SiamRPN(BaseSingleObjectTracker):
         context_xmax = int(center_xy[0] + crop_size / 2)
         context_ymin = int(center_xy[1] - crop_size / 2)
         context_ymax = int(center_xy[1] + crop_size / 2)
-        _context_xmin = center_xy[:, 0].unsqueeze(1) - crop_size // 2
-        _context_xmax = center_xy[:, 0].unsqueeze(1) + crop_size // 2
-        _context_ymin = center_xy[:, 1].unsqueeze(1) - crop_size // 2
-        _context_ymax = center_xy[:, 1].unsqueeze(1) + crop_size // 2
+        _context_xmin = center_xy[0] - crop_size // 2
+        _context_xmax = center_xy[0] + crop_size // 2
+        _context_ymin = center_xy[1] - crop_size // 2
+        _context_ymax = center_xy[1] + crop_size // 2
         print(f"context_xmin={context_xmin}, _context_xmin={_context_xmin}")
         print(f"context_xmax={context_xmax}, _context_xmax={_context_xmax}")
         print(f"context_ymin={context_ymin}, _context_ymin={_context_ymin}")
