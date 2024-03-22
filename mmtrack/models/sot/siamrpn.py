@@ -138,10 +138,10 @@ class SiamRPN(BaseSingleObjectTracker):
             resized cropped image.
         """
         N, C, H, W = img.shape
-        torch.export.constrain_as_size(N, min=1, max=1)
-        torch.export.constrain_as_size(C, min=3, max=3)
-        torch.export.constrain_as_size(H, min=0)
-        torch.export.constrain_as_size(W, min=0)
+        # torch.export.constrain_as_value(N, min=1, max=1)
+        # torch.export.constrain_as_size(C, min=3, max=3)
+        # torch.export.constrain_as_size(H, min=0)
+        # torch.export.constrain_as_size(W, min=0)
 
         context_xmin = center_xy[0] - crop_size / 2
         context_xmax = center_xy[0] + crop_size / 2
@@ -196,9 +196,13 @@ class SiamRPN(BaseSingleObjectTracker):
         torch.export.constrain_as_size(bottom_pad, min=0)
 
         avg_channel = avg_channel[:, None, None]
-        all_pads_reshaped = (top_pad.reshape(1), bottom_pad.reshape(1), left_pad.reshape(1), right_pad.reshape(1))
-        condition = torch.any(torch.cat(all_pads_reshaped))
-        def true_fn(top_pad, bottom_pad, left_pad, right_pad):
+        left_pad = left_pad.reshape(1)
+        top_pad = top_pad.reshape(1)
+        right_pad = right_pad.reshape(1)
+        bottom_pad = bottom_pad.reshape(1)
+        condition = torch.any(torch.cat((left_pad, top_pad, right_pad, bottom_pad)))
+        print(f"condition={condition}")
+        def true_fn(left_pad, top_pad, right_pad, bottom_pad, N, C, H, W, avg_channel, context_xmin, context_xmax, context_ymin, context_ymax):
             new_img = img.new_zeros(N, C, H + top_pad + bottom_pad,
                                     W + left_pad + right_pad)
             new_img[..., top_pad:top_pad + H, left_pad:left_pad + W] = img
@@ -210,12 +214,13 @@ class SiamRPN(BaseSingleObjectTracker):
                 new_img[..., :left_pad] = avg_channel
             if right_pad:
                 new_img[..., W + left_pad:] = avg_channel
-            return  new_img[..., context_ymin:context_ymax + 1,
+            return new_img[..., context_ymin:context_ymax + 1,
                                context_xmin:context_xmax + 1]
-        def false_fn(top_pad, bottom_pad, left_pad, right_pad):
+        def false_fn(left_pad, top_pad, right_pad, bottom_pad, N, C, H, W, avg_channel, context_xmin, context_xmax, context_ymin, context_ymax):
             return img[..., context_ymin:context_ymax + 1,
                            context_xmin:context_xmax + 1]
-        crop_img = cond(condition, true_fn, false_fn, all_pads_reshaped)
+        operands = [left_pad, top_pad, right_pad, bottom_pad, N, C, H, W, avg_channel, context_xmin, context_xmax, context_ymin, context_ymax]
+        crop_img = cond(condition, true_fn, false_fn, operands)
         crop_img = torch.nn.functional.interpolate(
             crop_img,
             size=(target_size, target_size),
