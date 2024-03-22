@@ -143,9 +143,6 @@ class SiamRPN(BaseSingleObjectTracker):
         torch.export.constrain_as_size(H, min=0)
         torch.export.constrain_as_size(W, min=0)
 
-        torch.export.constrain_as_size(center_xy.shape[0], min=2, max=2)
-        torch.export.constrain_as_size(avg_channel.shape[0], min=3, max=3)
-
         context_xmin = center_xy[0] - crop_size / 2
         context_xmax = center_xy[0] + crop_size / 2
         context_ymin = center_xy[1] - crop_size / 2
@@ -181,14 +178,20 @@ class SiamRPN(BaseSingleObjectTracker):
         bottom_pad = bottom_pad.reshape(1)
         condition = torch.cat((left_pad, top_pad, right_pad, bottom_pad))
         # Adding constraints
-        # torch.export.constrain_as_size(left_pad.shape[0], min=1, max=2)
-        # torch.export.constrain_as_size(top_pad.shape[0], min=1, max=2)
-        # torch.export.constrain_as_size(right_pad.shape[0], min=1, max=2)
-        # torch.export.constrain_as_size(bottom_pad.shape[0], min=1, max=2)
-        # torch.export.constrain_as_size(context_xmin.shape[0], min=1, max=1)
-        # torch.export.constrain_as_size(context_xmax.shape[0], min=1, max=1)
-        # torch.export.constrain_as_size(context_ymin.shape[0], min=1, max=1)
-        # torch.export.constrain_as_size(context_ymax.shape[0], min=1, max=1)
+        torch.export.constrain_as_value(left_pad.shape[0], min=0)
+        torch.export.constrain_as_value(top_pad.shape[0], min=0)
+        torch.export.constrain_as_value(right_pad.shape[0], min=0)
+        torch.export.constrain_as_value(bottom_pad.shape[0], min=0)
+
+        torch.export.constrain_as_size(left_pad.shape[0], min=1, max=2)
+        torch.export.constrain_as_size(top_pad.shape[0], min=1, max=2)
+        torch.export.constrain_as_size(right_pad.shape[0], min=1, max=2)
+        torch.export.constrain_as_size(bottom_pad.shape[0], min=1, max=2)
+
+        torch.export.constrain_as_size(context_xmin.shape[0], min=1, max=1)
+        torch.export.constrain_as_size(context_xmax.shape[0], min=1, max=1)
+        torch.export.constrain_as_size(context_ymin.shape[0], min=1, max=1)
+        torch.export.constrain_as_size(context_ymax.shape[0], min=1, max=1)
         def true_fn(left_pad, top_pad, right_pad, bottom_pad, N, C, H, W, avg_channel, context_xmin, context_xmax, context_ymin, context_ymax, img):
             new_img = img.new_zeros(N, C, H + top_pad + bottom_pad,
                                     W + left_pad + right_pad)
