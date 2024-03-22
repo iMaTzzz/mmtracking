@@ -137,6 +137,7 @@ class SiamRPN(BaseSingleObjectTracker):
             Tensor: of shape (1, C, target_size, target_size) encoding the
             resized cropped image.
         """
+        print(img.shape, center_xy.shape, target_size.shape, crop_size.shape, avg_channel.shape)
         N, C, H, W = img.shape
         torch.export.constrain_as_value(N, min=1, max=2)
         torch.export.constrain_as_size(C, min=3, max=3)
