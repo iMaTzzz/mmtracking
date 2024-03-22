@@ -268,10 +268,9 @@ class SiamRPN(BaseSingleObjectTracker):
         z_width = bbox[2] + self.test_cfg.context_amount * (bbox[2] + bbox[3])
         z_height = bbox[3] + self.test_cfg.context_amount * (bbox[2] + bbox[3])
         z_size = torch.round(torch.sqrt(z_width * z_height))
+        target_size = torch.tensor(self.test_cfg.exemplar_size)
         avg_channel = torch.mean(img, dim=(0, 2, 3))
-        z_crop = self.get_cropped_img(img, bbox[0:2],
-                                      torch.tensor(self.test_cfg.exemplar_size), z_size,
-                                      avg_channel)
+        z_crop = self.get_cropped_img(img, bbox[0:2], target_size, z_size, avg_channel)
         z_feat = self.forward_template(z_crop)
         self.frame_id += 1
         return z_feat, avg_channel
@@ -297,13 +296,9 @@ class SiamRPN(BaseSingleObjectTracker):
         z_width = bbox[2] + self.test_cfg.context_amount * (bbox[2] + bbox[3])
         z_height = bbox[3] + self.test_cfg.context_amount * (bbox[2] + bbox[3])
         z_size = torch.sqrt(z_width * z_height)
-
-        x_size = torch.round(
-            z_size * (self.test_cfg.search_size / self.test_cfg.exemplar_size))
-        x_crop = self.get_cropped_img(img, bbox[0:2],
-                                      torch.tensor(self.test_cfg.search_size), x_size,
-                                      avg_channel)
-
+        target_size = torch.tensor(self.test_cfg.exemplar_size)
+        x_size = torch.round(z_size * (self.test_cfg.search_size / self.test_cfg.exemplar_size))
+        x_crop = self.get_cropped_img(img, bbox[0:2], target_size, x_size, avg_channel)
         x_feat = self.forward_search(x_crop)
         cls_score, bbox_pred = self.head(z_feat, x_feat)
         scale_factor = self.test_cfg.exemplar_size / z_size
