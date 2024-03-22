@@ -129,7 +129,7 @@ class SiamRPN(BaseSingleObjectTracker):
                 image.
             center_xy (Tensor): of shape (2, ) denoting the center point for
                 cropping image.
-            target_size (int): The output size of cropped image.
+            target_size (Tensor): of shape (1) denoting the output size of cropped image.
             crop_size (Tensor): The size for cropping image.
             avg_channel (Tensor): of shape (3, ) denoting the padding values.
 
@@ -194,10 +194,6 @@ class SiamRPN(BaseSingleObjectTracker):
         # print(f"top_pad={top_pad}")
         # print(f"right_pad={right_pad}")
         # print(f"bottom_pad={bottom_pad}")
-        torch.export.constrain_as_size(left_pad, min=0)
-        torch.export.constrain_as_size(top_pad, min=0)
-        torch.export.constrain_as_size(right_pad, min=0)
-        torch.export.constrain_as_size(bottom_pad, min=0)
 
         avg_channel = avg_channel[:, None, None]
         left_pad = left_pad.reshape(1)
@@ -205,6 +201,16 @@ class SiamRPN(BaseSingleObjectTracker):
         right_pad = right_pad.reshape(1)
         bottom_pad = bottom_pad.reshape(1)
         condition = torch.cat((left_pad, top_pad, right_pad, bottom_pad))
+        # Adding constraints
+        torch.export.constrain_as_size(left_pad, min=1, max=1)
+        torch.export.constrain_as_size(top_pad, min=1, max=1)
+        torch.export.constrain_as_size(right_pad, min=1, max=1)
+        torch.export.constrain_as_size(bottom_pad, min=1, max=1)
+        torch.export.constrain_as_size(context_xmin, min=1, max=1)
+        torch.export.constrain_as_size(context_xmax, min=1, max=1)
+        torch.export.constrain_as_size(context_ymin, min=1, max=1)
+        torch.export.constrain_as_size(context_ymax, min=1, max=1)
+        torch.export.constrain_as_size(avg_channel, min=3, max=3)
         def true_fn(left_pad, top_pad, right_pad, bottom_pad, N, C, H, W, avg_channel, context_xmin, context_xmax, context_ymin, context_ymax, img):
             new_img = img.new_zeros(N, C, H + top_pad + bottom_pad,
                                     W + left_pad + right_pad)
@@ -260,7 +266,7 @@ class SiamRPN(BaseSingleObjectTracker):
         z_size = torch.round(torch.sqrt(z_width * z_height))
         avg_channel = torch.mean(img, dim=(0, 2, 3))
         z_crop = self.get_cropped_img(img, bbox[0:2],
-                                      self.test_cfg.exemplar_size, z_size,
+                                      torch.tensor(self.test_cfg.exemplar_size), z_size,
                                       avg_channel)
         z_feat = self.forward_template(z_crop)
         self.frame_id += 1
@@ -291,7 +297,7 @@ class SiamRPN(BaseSingleObjectTracker):
         x_size = torch.round(
             z_size * (self.test_cfg.search_size / self.test_cfg.exemplar_size))
         x_crop = self.get_cropped_img(img, bbox[0:2],
-                                      self.test_cfg.search_size, x_size,
+                                      torch.tensor(self.test_cfg.search_size), x_size,
                                       avg_channel)
 
         x_feat = self.forward_search(x_crop)
