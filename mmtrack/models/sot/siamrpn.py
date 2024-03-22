@@ -138,6 +138,10 @@ class SiamRPN(BaseSingleObjectTracker):
             resized cropped image.
         """
         N, C, H, W = img.shape
+        N = torch.tensor(N)
+        C = torch.tensor(C)
+        H = torch.tensor(H)
+        W = torch.tensor(W)
         # torch.export.constrain_as_value(N, min=1, max=1)
         # torch.export.constrain_as_size(C, min=3, max=3)
         # torch.export.constrain_as_size(H, min=0)
