@@ -48,7 +48,7 @@ def main():
     print(f"args={args}")
     # export_options = torch.onnx.ExportOptions(dynamic_shapes=False)
     # onnx_model = torch.onnx.dynamo_export(model, *args, export_options=export_options)
-    onnx_model = torch.onnx.export(model, *args, model_name)
+    onnx_model = torch.onnx.export(model, **data, model_name)
     onnx_model.save(model_name)
     # onnx_model = onnx.load(model_name)
     # onnx.checker.check_model(onnx_model)
