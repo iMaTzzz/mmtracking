@@ -201,7 +201,6 @@ class SiamRPN(BaseSingleObjectTracker):
         right_pad = right_pad.reshape(1)
         bottom_pad = bottom_pad.reshape(1)
         condition = torch.cat((left_pad, top_pad, right_pad, bottom_pad))
-        print(f"condition={condition}")
         def true_fn(left_pad, top_pad, right_pad, bottom_pad, N, C, H, W, avg_channel, context_xmin, context_xmax, context_ymin, context_ymax):
             new_img = img.new_zeros(N, C, H + top_pad + bottom_pad,
                                     W + left_pad + right_pad)
