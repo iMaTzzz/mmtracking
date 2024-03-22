@@ -147,49 +147,29 @@ class SiamRPN(BaseSingleObjectTracker):
         context_xmax = center_xy[0] + crop_size / 2
         context_ymin = center_xy[1] - crop_size / 2
         context_ymax = center_xy[1] + crop_size / 2
-        # print(f"context_xmin={context_xmin}, _context_xmin={_context_xmin}")
-        # print(f"context_xmax={context_xmax}, _context_xmax={_context_xmax}")
-        # print(f"context_ymin={context_ymin}, _context_ymin={_context_ymin}")
-        # print(f"context_ymax={context_ymax}, _context_ymax={_context_ymax}")
         context_xmin = context_xmin.int()
         context_xmax = context_xmax.int()
         context_ymin = context_ymin.int()
         context_ymax = context_ymax.int()
-        #print(f"context_xmin={context_xmin}")
-        # print(f"context_xmax={context_xmax}")
-        # print(f"context_ymin={context_ymin}")
-        # print(f"context_ymax={context_ymax}")
 
-        # left_pad = max(0, -context_xmin)
-        # top_pad = max(0, -context_ymin)
-        # right_pad = max(0, context_xmax - W)
-        # bottom_pad = max(0, context_ymax - H)
-        # left_pad = torch.max(-context_xmin, torch.tensor(0, device=img.device))
-        # top_pad = torch.max(-context_ymin, torch.tensor(0, device=img.device))
-        # right_pad = torch.max(context_xmax - W, torch.tensor(0, device=img.device))
-        # bottom_pad = torch.max(context_ymax - H, torch.tensor(0, device=img.device))
-        left_pad = torch.clamp(-context_xmin, min=0)
-        top_pad = torch.clamp(-context_ymin, min=0)
-        right_pad = torch.clamp(-context_xmax, min=0)
-        bottom_pad = torch.clamp(-context_ymax, min=0)
-        # print(f"left_pad={left_pad}, _left_pad={_left_pad}")
-        # print(f"top_pad={top_pad}, _top_pad={_top_pad}")
-        # print(f"right_pad={right_pad}, _right_pad={_right_pad}")
-        # print(f"bottom_pad={bottom_pad}, _bottom_pad={_bottom_pad}")
+        left_pad = torch.max(-context_xmin, torch.tensor(0, device=img.device))
+        top_pad = torch.max(-context_ymin, torch.tensor(0, device=img.device))
+        right_pad = torch.max(context_xmax - W, torch.tensor(0, device=img.device))
+        bottom_pad = torch.max(context_ymax - H, torch.tensor(0, device=img.device))
 
-        # context_xmin += left_pad
-        # context_xmax += left_pad
-        # context_ymin += top_pad
-        # context_ymax += top_pad
         context_xmin += left_pad
-        context_xmax +=  left_pad
+        context_xmax += left_pad
         context_ymin += top_pad
         context_ymax += top_pad
+        print(f"context_xmin={context_xmin}")
+        print(f"context_xmax={context_xmax}")
+        print(f"context_ymin={context_ymin}")
+        print(f"context_ymax={context_ymax}")
 
-        # print(f"left_pad={left_pad}")
-        # print(f"top_pad={top_pad}")
-        # print(f"right_pad={right_pad}")
-        # print(f"bottom_pad={bottom_pad}")
+        print(f"left_pad={left_pad}")
+        print(f"top_pad={top_pad}")
+        print(f"right_pad={right_pad}")
+        print(f"bottom_pad={bottom_pad}")
 
         avg_channel = avg_channel[:, None, None]
         left_pad = left_pad.reshape(1)
